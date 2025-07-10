@@ -13,7 +13,7 @@ import Thanks from './Pages/Thanks';
 import UploadQuestionPaper from './Pages/UploadQuestionPaper';
 import TraineeProfile from './Pages/TraineeProfile';
 import logo from './assets/Images/logo.png';
-import LoginForm from './Pages/Loginform';
+import LoginForm from './Pages/LoginForm';
 import ProtectedRoute from './Components/ProtectedRoute';
 
 function AppLayout() {
