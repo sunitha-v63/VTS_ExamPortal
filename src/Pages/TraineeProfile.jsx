@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import '../App.css';
 
 const TraineeProfile = () => {
   const { state } = useLocation();

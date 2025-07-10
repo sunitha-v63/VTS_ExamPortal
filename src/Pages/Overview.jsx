@@ -4,7 +4,7 @@ import profilePic from '../assets/Images/Img1.png'
 import notificationIcon from "../assets/Images/Notification.png";
 import Trainee from '../Components/Trainee.jsx';
 import Questionpaper from '../Components/Questionpaper.jsx';
-import traineesIcon from '../assets/Images/Total Trainees.png';
+import traineesIcon from '../assets/Images/TotalTrainees.png';
 import coursesIcon from '../assets/Images/courses.png';
 import examsIcon from '../assets/Images/Exams.png'  
 import { useNavigate } from 'react-router-dom'; 

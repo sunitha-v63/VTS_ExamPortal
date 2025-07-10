@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import successImg from '../assets/images/Submitted img.png';
+import successImg from '../assets/images/submittedimg.png';
 
 const Thanks = () => {
   const navigate = useNavigate();
