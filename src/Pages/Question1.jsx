@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Question1 = () => {
@@ -18,6 +18,10 @@ const Question1 = () => {
   };
 
   const goToNext = () => {
+    if (Object.keys(answers).length !== questions.length) {
+      alert("Please answer all the questions before proceeding.");
+      return;
+    }
     localStorage.setItem('technicalExam1', JSON.stringify(answers));
     navigate('/question2');
   };
@@ -29,11 +33,11 @@ const Question1 = () => {
   return (
     <div className="flex-grow-1 p-4">
       <style>{`
-          input[type="radio"].form-check-input:checked {
-            background-color: black !important;
-            border-color: black !important;
-          }
-        `}</style>
+        input[type="radio"].form-check-input:checked {
+          background-color: black !important;
+          border-color: black !important;
+        }
+      `}</style>
 
       <h3 className="text-center mb-4 fw-bold questitle">Figma Technical Questions</h3>
       <div className="rounded p-4 fs-5" style={{ backgroundColor: '#f0facc' }}>

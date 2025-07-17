@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import Trainee from "../Components/Trainee";
 import Questionpaper from "../Components/Questionpaper";
-import AddTraineeModal from "../Components/Addtrainee"
+import AddTraineeModal from "../Components/Addtrainee";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Designing = () => {
@@ -20,7 +20,7 @@ const Designing = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = 'VTS_Exam_Portal | Designing';
+    document.title = "VTS_Exam_Portal | Designing";
   }, []);
 
   const toggleModal = () => setShowModal(!showModal);
@@ -68,6 +68,9 @@ const Designing = () => {
     }
   };
 
+  const role = localStorage.getItem("userRole");
+  const isAdminOrTrainer = role === "admin" || role === "trainer";
+
   return (
     <div className="d-flex">
       <div className="container py-4 flex-grow-1">
@@ -78,11 +81,23 @@ const Designing = () => {
               <FaSearch />
             </button>
           </div>
+
           <div className="d-flex gap-5" style={{ marginRight: "200px" }}>
-            <button className="btn btn-dark d-flex align-items-center gap-2 px-3" onClick={toggleModal}>
+            <button
+              className="btn btn-dark d-flex align-items-center gap-2 px-3"
+              onClick={toggleModal}
+              disabled={!isAdminOrTrainer}
+              title={!isAdminOrTrainer ? "Access restricted to admin and trainer" : ""}
+            >
               <FaFilter /> Filter
             </button>
-            <button className="btn btn-dark" onClick={() => setShowAddTrainee(true)}>
+
+            <button
+              className="btn btn-dark"
+              onClick={() => setShowAddTrainee(true)}
+              disabled={!isAdminOrTrainer}
+              title={!isAdminOrTrainer ? "Access restricted to admin and trainer" : ""}
+            >
               + Add Trainee
             </button>
             {showAddTrainee && <AddTraineeModal setShowAddTrainee={setShowAddTrainee} />}
@@ -91,7 +106,6 @@ const Designing = () => {
         <Trainee />
         <Questionpaper />
       </div>
-
 
       {showModal && (
         <>
@@ -114,6 +128,7 @@ const Designing = () => {
                     />
                     {errors.traineeName && <div className="text-danger">{errors.traineeName}</div>}
                   </div>
+
                   <div className="mb-3">
                     <label>Course Name</label>
                     <input
@@ -125,6 +140,7 @@ const Designing = () => {
                     />
                     {errors.courseName && <div className="text-danger">{errors.courseName}</div>}
                   </div>
+
                   <div className="mb-3">
                     <label>Duration</label>
                     <input
@@ -136,6 +152,7 @@ const Designing = () => {
                     />
                     {errors.duration && <div className="text-danger">{errors.duration}</div>}
                   </div>
+
                   <div className="mb-3">
                     <label>Class Mode</label>
                     <div className="form-check custom-radio">
@@ -148,7 +165,9 @@ const Designing = () => {
                         onChange={handleChange}
                         id="online"
                       />
-                      <label className="form-check-label" htmlFor="online">Online</label>
+                      <label className="form-check-label" htmlFor="online">
+                        Online
+                      </label>
                     </div>
                     <div className="form-check custom-radio">
                       <input
@@ -160,13 +179,20 @@ const Designing = () => {
                         onChange={handleChange}
                         id="offline"
                       />
-                      <label className="form-check-label" htmlFor="offline">Offline</label>
+                      <label className="form-check-label" htmlFor="offline">
+                        Offline
+                      </label>
                     </div>
                     {errors.mode && <div className="text-danger">{errors.mode}</div>}
                   </div>
                 </div>
+
                 <div className="modal-footer d-flex justify-content-center">
-                  <button className="btn px-4" style={{ backgroundColor: "#d8f275" }} onClick={handleSubmit}>
+                  <button
+                    className="btn px-4"
+                    style={{ backgroundColor: "#d8f275" }}
+                    onClick={handleSubmit}
+                  >
                     Submit
                   </button>
                 </div>

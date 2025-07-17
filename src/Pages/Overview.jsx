@@ -38,23 +38,6 @@ function Overview() {
             </div>
           </div>
 
-          {/* <div className="col-md-4 d-flex justify-content-end gap-3" style={{ paddingRight: "20px" }}>
-            <img
-              src={notificationIcon}
-              alt="Notification"
-              width={25}
-              height={35}
-              style={{ marginRight: "20px", marginTop: "5px" }}
-            />
-            <img
-              src={profilePic}
-              alt="Profile"
-              className="rounded-circle"
-              width={55}
-              height={55}
-              style={{ marginRight: "100px" }}
-            />
-          </div> */}
           <div className="col-md-4 d-flex justify-content-end gap-3" style={{ paddingRight: "20px", position: "relative" }}>
             <img
               src={notificationIcon}
@@ -150,7 +133,6 @@ function Overview() {
           </div>
         </div>
       </div>
-      {/* ---container3 */}
       <Trainee />
       <Questionpaper />
     </>

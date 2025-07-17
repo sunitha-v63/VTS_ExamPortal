@@ -5,13 +5,25 @@ const Questionpaper = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
 
+  // ✅ Corrected key
+  const role = localStorage.getItem("userRole"); 
+  const isAdmin = role === "admin";
+
   const handleFile = (e) => {
+    if (!isAdmin) {
+      setError("Only admin is allowed to upload.");
+      return;
+    }
     const uploadedFile = e.target.files[0];
     validateAndSetFile(uploadedFile);
   };
 
   const validateAndSetFile = (file) => {
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     if (file && allowedTypes.includes(file.type)) {
       if (file.size <= 10 * 1024 * 1024) {
         setFile(file);
@@ -26,6 +38,10 @@ const Questionpaper = () => {
 
   const handleDrop = (e) => {
     e.preventDefault();
+    if (!isAdmin) {
+      setError("Only admin is allowed to upload.");
+      return;
+    }
     const droppedFile = e.dataTransfer.files[0];
     validateAndSetFile(droppedFile);
   };
@@ -38,7 +54,8 @@ const Questionpaper = () => {
         style={{
           borderStyle: "dashed",
           borderWidth: "2px",
-          cursor: "pointer"
+          cursor: isAdmin ? "pointer" : "not-allowed",
+          opacity: isAdmin ? 1 : 0.5,
         }}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
@@ -48,13 +65,22 @@ const Questionpaper = () => {
         <p className="mb-2">or</p>
         <label className="btn btn-dark">
           Browse Files
-          <input type="file" hidden onChange={handleFile} accept=".pdf,.doc,.docx" />
+          <input
+            type="file"
+            hidden
+            onChange={handleFile}
+            accept=".pdf,.doc,.docx"
+            disabled={!isAdmin}
+          />
         </label>
         <p className="text-muted mt-2" style={{ fontSize: "14px" }}>
           Supported formats: PDF, DOC, DOCX (Max: 10MB)
         </p>
         {file && <p className="text-success mt-2">File selected: {file.name}</p>}
         {error && <p className="text-danger mt-2">{error}</p>}
+        {!isAdmin && (
+          <p className="text-warning mt-2 fw-bold">Only admin can upload files.</p>
+        )}
       </div>
     </div>
   );

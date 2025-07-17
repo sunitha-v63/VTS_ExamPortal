@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import defaultUserImage from '../assets/Images/Img1.png';
 
@@ -7,8 +7,11 @@ const Exam = ({ today, radiumGreen = '#d7f96a' }) => {
   const navigate = useNavigate();
 
   const userData = location.state || {};
-  const userName = userData.name || 'Trainee';
+  const storedName = localStorage.getItem('traineeName') || 'Trainee';
+
+  const userName = userData.name || storedName;
   const chosenImage = userData.image || defaultUserImage;
+
   const currentDate =
     userData.today ||
     new Date().toLocaleDateString('en-GB', {
@@ -39,7 +42,6 @@ const Exam = ({ today, radiumGreen = '#d7f96a' }) => {
           <h5 className="mb-3 mt-5 fs-3">Upcoming Exams</h5>
 
           <div className="card p-3 w-100" style={{ backgroundColor: radiumGreen }}>
-            {/* Technical Section */}
             <div className="mb-4">
               <div className="d-flex fs-4 p-2 justify-content-between align-items-center mb-2">
                 <strong>Technical Questions</strong>
@@ -66,7 +68,7 @@ const Exam = ({ today, radiumGreen = '#d7f96a' }) => {
                 </div>
               </div>
             </div>
-            {/* Practical Section */}
+            
             <div>
               <div className="d-flex justify-content-between align-items-center mb-2 fs-4">
                 <strong>Practical Questions</strong>

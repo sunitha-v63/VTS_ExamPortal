@@ -45,6 +45,7 @@ function AppLayout() {
             <Route path="/overview" element={<ProtectedRoute><Overview /></ProtectedRoute>} />
             <Route path="/designing" element={<ProtectedRoute><Designing /></ProtectedRoute>} />
             <Route path="/exam" element={<ProtectedRoute><Exam /></ProtectedRoute>} />
+            <Route path="/uploadpaper" element={<ProtectedRoute><UploadQuestionPaper /></ProtectedRoute>} />
             <Route path="/offlinetrainees" element={<ProtectedRoute><OfflineTrainees /></ProtectedRoute>} />
             <Route path="/onlinetrainees" element={<ProtectedRoute><OnlineTrainees /></ProtectedRoute>} />
             <Route path="/traineeprofile" element={<ProtectedRoute><TraineeProfile /></ProtectedRoute>} />
@@ -52,7 +53,6 @@ function AppLayout() {
             <Route path="/question2" element={<ProtectedRoute><Question2 /></ProtectedRoute>} />
             <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
             <Route path="/thanks" element={<ProtectedRoute><Thanks /></ProtectedRoute>} />
-            <Route path="/uploadpaper" element={<ProtectedRoute><UploadQuestionPaper /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
