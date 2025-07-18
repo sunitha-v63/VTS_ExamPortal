@@ -1,10 +1,10 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TraineeCard from '../Components/TraineeCard.jsx';
 import { offlineTrainees } from '../data/OfflineTrainee.jsx';
 
 const OfflineTrainees = () => {
- return (
+  return (
     <div className="d-flex">
       <div className="container-fluid">
         <h5 className="mt-3">
@@ -21,19 +21,18 @@ const OfflineTrainees = () => {
           </Link>
         </h5>
 
-       <div className="container mt-4">
-  <div className="row gx-2 gy-3">
-    {offlineTrainees.map((trainee) => (
-      <div
-        className="col-12 col-md-6 col-lg-4 d-flex justify-content-center"
-        key={trainee.id}
-      >
-        <TraineeCard {...trainee} />
-      </div>
-    ))}
-  </div>
-</div>
-
+        <div className="container mt-4">
+          <div className="row gx-2 gy-3">
+            {offlineTrainees.map((trainee) => (
+              <div
+                className="col-12 col-md-6 col-lg-4 d-flex justify-content-center"
+                key={trainee.id}
+              >
+                <TraineeCard {...trainee} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

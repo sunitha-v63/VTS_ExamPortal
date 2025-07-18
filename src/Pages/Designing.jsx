@@ -32,45 +32,23 @@ const Designing = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.traineeName.trim()) {
-      newErrors.traineeName = "Trainee name is required";
-    } else if (!/^[A-Za-z\s]+$/.test(formData.traineeName.trim())) {
-      newErrors.traineeName = "Trainee name must only contain letters and spaces";
-    }
-
-    if (!formData.courseName.trim()) {
-      newErrors.courseName = "Course name is required";
-    }
-
-    if (!formData.duration.trim()) {
-      newErrors.duration = "Duration is required";
-    }
-
-    if (!formData.mode) {
-      newErrors.mode = "Please select Online or Offline";
-    }
-
+    if (!formData.traineeName.trim()) newErrors.traineeName = "Required";
+    else if (!/^[A-Za-z\s]+$/.test(formData.traineeName.trim())) newErrors.traineeName = "Only letters and spaces";
+    if (!formData.courseName.trim()) newErrors.courseName = "Required";
+    if (!formData.duration.trim()) newErrors.duration = "Required";
+    if (!formData.mode) newErrors.mode = "Please select Online or Offline";
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmitFilter = () => {
     if (!validateForm()) return;
-
-    toggleModal();
-
-    if (formData.mode === "online") {
-      navigate("/onlinetrainees");
-    } else if (formData.mode === "offline") {
-      navigate("/offlinetrainees");
-    }
+    setShowModal(false);
+    navigate(formData.mode === "online" ? "/onlinetrainees" : "/offlinetrainees");
   };
 
   const role = localStorage.getItem("userRole");
   const isAdminOrTrainer = role === "admin" || role === "trainer";
-
   return (
     <div className="d-flex">
       <div className="container py-4 flex-grow-1">
@@ -81,32 +59,34 @@ const Designing = () => {
               <FaSearch />
             </button>
           </div>
-
           <div className="d-flex gap-5" style={{ marginRight: "200px" }}>
             <button
               className="btn btn-dark d-flex align-items-center gap-2 px-3"
               onClick={toggleModal}
               disabled={!isAdminOrTrainer}
-              title={!isAdminOrTrainer ? "Access restricted to admin and trainer" : ""}
+              title={!isAdminOrTrainer ? "Access restricted" : ""}
             >
               <FaFilter /> Filter
             </button>
-
             <button
               className="btn btn-dark"
               onClick={() => setShowAddTrainee(true)}
               disabled={!isAdminOrTrainer}
-              title={!isAdminOrTrainer ? "Access restricted to admin and trainer" : ""}
+              title={!isAdminOrTrainer ? "Access restricted" : ""}
             >
               + Add Trainee
             </button>
-            {showAddTrainee && <AddTraineeModal setShowAddTrainee={setShowAddTrainee} />}
+            {showAddTrainee && (
+              <AddTraineeModal
+                setShowAddTrainee={setShowAddTrainee}
+                navigate={navigate}
+              />
+            )}
           </div>
         </div>
         <Trainee />
         <Questionpaper />
       </div>
-
       {showModal && (
         <>
           <div className="modal fade show d-block" tabIndex="-1">
@@ -120,86 +100,71 @@ const Designing = () => {
                   <div className="mb-3">
                     <label>Trainee's Name</label>
                     <input
-                      className={`form-control w-75 ${errors.traineeName ? "is-invalid" : ""}`}
-                      type="text"
                       name="traineeName"
+                      className={`form-control w-75 ${errors.traineeName ? "is-invalid" : ""}`}
                       value={formData.traineeName}
                       onChange={handleChange}
                     />
                     {errors.traineeName && <div className="text-danger">{errors.traineeName}</div>}
                   </div>
-
                   <div className="mb-3">
                     <label>Course Name</label>
                     <input
-                      className={`form-control w-75 ${errors.courseName ? "is-invalid" : ""}`}
-                      type="text"
                       name="courseName"
+                      className={`form-control w-75 ${errors.courseName ? "is-invalid" : ""}`}
                       value={formData.courseName}
                       onChange={handleChange}
                     />
                     {errors.courseName && <div className="text-danger">{errors.courseName}</div>}
                   </div>
-
                   <div className="mb-3">
                     <label>Duration</label>
                     <input
-                      className={`form-control w-75 ${errors.duration ? "is-invalid" : ""}`}
-                      type="text"
                       name="duration"
+                      className={`form-control w-75 ${errors.duration ? "is-invalid" : ""}`}
                       value={formData.duration}
                       onChange={handleChange}
                     />
                     {errors.duration && <div className="text-danger">{errors.duration}</div>}
                   </div>
-
                   <div className="mb-3">
                     <label>Class Mode</label>
                     <div className="form-check custom-radio">
                       <input
-                        className="form-check-input"
                         type="radio"
                         name="mode"
                         value="online"
                         checked={formData.mode === "online"}
                         onChange={handleChange}
-                        id="online"
+                        id="radioOnline"
+                        className="form-check-input"
                       />
-                      <label className="form-check-label" htmlFor="online">
-                        Online
-                      </label>
+                      <label htmlFor="radioOnline" className="form-check-label">Online</label>
                     </div>
                     <div className="form-check custom-radio">
                       <input
-                        className="form-check-input"
                         type="radio"
                         name="mode"
                         value="offline"
                         checked={formData.mode === "offline"}
                         onChange={handleChange}
-                        id="offline"
+                        id="radioOffline"
+                        className="form-check-input"
                       />
-                      <label className="form-check-label" htmlFor="offline">
-                        Offline
-                      </label>
+                      <label htmlFor="radioOffline" className="form-check-label">Offline</label>
                     </div>
                     {errors.mode && <div className="text-danger">{errors.mode}</div>}
                   </div>
                 </div>
-
                 <div className="modal-footer d-flex justify-content-center">
-                  <button
-                    className="btn px-4"
-                    style={{ backgroundColor: "#d8f275" }}
-                    onClick={handleSubmit}
-                  >
+                  <button className="btn px-4" style={{ backgroundColor: "#d8f275" }} onClick={handleSubmitFilter}>
                     Submit
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <div className="modal-backdrop fade show"></div>
+          <div className="modal-backdrop fade show" />
         </>
       )}
     </div>

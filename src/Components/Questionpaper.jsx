@@ -5,7 +5,6 @@ const Questionpaper = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
 
-  // ✅ Corrected key
   const role = localStorage.getItem("userRole"); 
   const isAdmin = role === "admin";
 

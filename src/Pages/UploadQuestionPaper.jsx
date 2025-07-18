@@ -25,7 +25,6 @@ const UploadBox = ({ label }) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
       console.log('Selected file:', file);
-      // You can now upload this file via FormData, e.g. fetch/axios
     }
   };
 
@@ -40,7 +39,6 @@ const UploadBox = ({ label }) => {
         accept=".pdf,.doc,.docx"
         onChange={handleFileChange}
       />
-
       <div
         className="border border-warning border-dashed d-flex flex-column align-items-center justify-content-center p-5 mt-3"
         style={{ borderColor: '#d6ff94', minHeight: '150px', borderStyle: 'dashed' }}

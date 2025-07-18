@@ -11,27 +11,28 @@ const data = [
 const Result = () => {
   const [rows, setRows] = useState(() => {
     const stored = JSON.parse(localStorage.getItem('technicalExamResults'));
-    return stored && Array.isArray(stored) ? stored : [];
+    return Array.isArray(stored) ? stored : [];
   });
   const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
-
   useEffect(() => {
     localStorage.setItem('technicalExamResults', JSON.stringify(rows));
   }, [rows]);
-
   useEffect(() => {
-    const savedName = localStorage.getItem('currentTraineeName');
+    const savedName = localStorage.getItem('currentTraineeName') || '-';
     let updated = false;
 
-    const patched = rows.map((entry) => {
+    const patched = rows.map(entry => {
       const practical = entry.practical ?? Math.floor(Math.random() * 21) + 50;
       const score = entry.score ?? entry.tech ?? 0;
-      const trainer = entry.trainer || 'Priya';
-      const name =
-        entry.name && entry.name.toLowerCase() !== 'unknown'
-          ? entry.name
-          : savedName || 'Unknown';
+      const trainer = entry.trainer || '-';
+
+      let name = entry.name && entry.name.toLowerCase() !== 'unknown'
+        ? entry.name
+        : savedName;
+
+      if (!name.trim()) name = '-';
+
       const total = score + practical;
 
       if (entry.practical === undefined || entry.name?.toLowerCase() === 'unknown') {
@@ -41,108 +42,31 @@ const Result = () => {
       return { ...entry, name, trainer, score, practical, total };
     });
 
-    if (updated) {
-      setRows(patched);
-    }
+    if (updated) setRows(patched);
   }, []);
 
   const downloadCSV = () => {
-    const header = [
-      'S.No',
-      'Trainee Name',
-      'Trainer Name',
-      'Technical (30)',
-      'Practical (70)',
-      'Total (100)',
-    ];
-    const csv = [
+    const header = ['S.No', 'Trainee Name', 'Trainer Name', 'Technical (30)', 'Practical (70)', 'Total (100)'];
+    const csvRows = [
       header.join(','),
-      ...rows.map((r, i) =>
-        [i + 1, r.name, r.trainer, r.score, r.practical, r.total].join(',')
-      ),
-    ].join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      ...rows.map((r, i) => [i + 1, r.name, r.trainer, r.score, r.practical, r.total].join(','))
+    ];
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = Object.assign(document.createElement('a'), {
-      href: url,
-      download: 'exam_scores.csv',
-    });
+    const link = Object.assign(document.createElement('a'), { href: url, download: 'exam_scores.csv' });
     document.body.appendChild(link);
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
   };
-
-  const enterEditMode = () => setEditMode(true);
-
-  const handleRowChange = (idx, field, value) => {
-    const num = field === 'practical' || field === 'score' ? Number(value) : value;
-    setRows((prev) =>
-      prev.map((row, i) =>
-        i === idx
-          ? {
-              ...row,
-              [field]: num,
-              total:
-                field === 'practical'
-                  ? num + (row.score || 0)
-                  : field === 'score'
-                  ? num + (row.practical || 0)
-                  : row.total,
-            }
-          : row
-      )
-    );
-  };
-
-  const addNewRow = () => {
-    setRows((prev) => [
-      ...prev,
-      {
-        name: '',
-        trainer: '',
-        score: 0,
-        practical: 0,
-        total: 0,
-      },
-    ]);
-  };
-
-  const saveChanges = () => {
-    for (const r of rows) {
-      const practical = Number(r.practical);
-      const score = Number(r.score);
-      if (practical < 0 || practical > 70 || Number.isNaN(practical)) {
-        alert(`Practical mark for ${r.name} must be between 0 and 70`);
-        return;
-      }
-      if (score < 0 || score > 30 || Number.isNaN(score)) {
-        alert(`Technical score for ${r.name} must be between 0 and 30`);
-        return;
-      }
-    }
-    setEditMode(false);
-  };
-
   const Tablehead = { border: 'none', padding: '25px' };
-
   return (
     <>
       <div className="container mt-4">
         <div className="row justify-content-center">
-          {data.map((item, index) => (
-            <div key={index} className="col-6 col-md-6 col-lg-3 mb-3">
-              <div
-                className="card text-center"
-                style={{
-                  backgroundColor: "#e7f98f",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "10px",
-                  height: "100%",
-                }}
-              >
+          {data.map((item, idx) => (
+            <div key={idx} className="col-6 col-md-6 col-lg-3 mb-3">
+              <div className="card text-center" style={{ backgroundColor: "#e7f98f", border: "none", borderRadius: "8px", padding: "10px", height: "100%" }}>
                 <div className="card-body">
                   <p style={{ fontWeight: 500 }}>{item.label}</p>
                   <h5 style={{ fontWeight: 700, margin: 0 }}>{item.value}</h5>
@@ -152,33 +76,23 @@ const Result = () => {
           ))}
         </div>
       </div>
-
       <div className="container py-4">
         <div className="table-responsive table-responsive-sm mt-4">
-          <table
-            className="table text-center w-100 result-table"
-            style={{ borderCollapse: 'collapse', border: 'none' }}
-          >
+          <table className="table text-center w-100 result-table" style={{ borderCollapse: 'collapse', border: 'none' }}>
             <thead>
               <tr style={{ backgroundColor: '#201F31', color: '#000' }}>
                 <th style={Tablehead}>S.No</th>
                 <th style={Tablehead}>Trainee's Name</th>
                 <th style={Tablehead}>Trainer Name</th>
-                <th style={Tablehead}>
-                  Technical Marks <br />(Out of 30)
-                </th>
-                <th style={Tablehead}>
-                  Practical Marks <br />(Out of 70)
-                </th>
+                <th style={Tablehead}>Technical Marks <br />(Out of 30)</th>
+                <th style={Tablehead}>Practical Marks <br />(Out of 70)</th>
                 <th style={Tablehead}>Total Marks</th>
               </tr>
             </thead>
-            <tbody style={{ backgroundColor: " #d7f96a", color: '#000' }}>
+            <tbody style={{ backgroundColor: "#d7f96a", color: '#000' }}>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan="6" style={Tablehead}>
-                    No data yet
-                  </td>
+                  <td colSpan="6" style={Tablehead}>No data yet</td>
                 </tr>
               ) : (
                 rows.map((r, i) => (
@@ -213,9 +127,7 @@ const Result = () => {
                           min="0"
                           max="30"
                           value={r.score}
-                          onChange={(e) =>
-                            handleRowChange(i, 'score', e.target.value)
-                          }
+                          onChange={(e) => handleRowChange(i, 'score', e.target.value)}
                           className="form-control form-control-sm text-center"
                           style={{ maxWidth: 80 }}
                         />
@@ -230,9 +142,7 @@ const Result = () => {
                           min="0"
                           max="70"
                           value={r.practical}
-                          onChange={(e) =>
-                            handleRowChange(i, 'practical', e.target.value)
-                          }
+                          onChange={(e) => handleRowChange(i, 'practical', e.target.value)}
                           className="form-control form-control-sm text-center"
                           style={{ maxWidth: 80 }}
                         />
@@ -247,41 +157,21 @@ const Result = () => {
             </tbody>
           </table>
         </div>
-
         <div className="d-flex justify-content-center gap-4 mt-4">
-          <button className="btn btn-dark" onClick={downloadCSV}>
-            Download
-          </button>
-
-          {editMode ? (
-            <>
-              <button className="btn btn-success" onClick={saveChanges}>
-                Save
-              </button>
-              <button className="btn btn-outline-success" onClick={addNewRow}>
-                + Add New Row
-              </button>
-            </>
-          ) : (
-            <button className="btn btn-warning text-dark" onClick={enterEditMode}>
-              Edit
-            </button>
-          )}
-
+          <button className="btn btn-dark" onClick={downloadCSV}>Download</button>
           <button
             className="btn btn-secondary text-dark"
+            style={{ backgroundColor: '#d6ff63' }}
             onClick={() => {
               const confirmExit = window.confirm("Are you sure you want to exit?");
               if (confirmExit) {
-                const role = localStorage.getItem('role');
-                if (role === 'trainee') {
-                  navigate('/exam');
-                } else {
-                  navigate('/');
-                }
+                localStorage.removeItem('technicalExamResults');
+                setRows([]);
+
+                const role = localStorage.getItem('userRole');
+                navigate(role === 'trainee' ? '/exam' : '/');
               }
             }}
-            style={{ backgroundColor: '#d6ff63' }}
           >
             Exit
           </button>

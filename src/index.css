@@ -79,6 +79,19 @@ table.result-table tbody td {
   border-radius: 50%;
 }
 
+.login-wrapper .login-container {
+  margin-right: 60px;
+}
+
+@media (max-width: 768px) {
+  .login-wrapper .vh-100 {
+    justify-content: center !important;
+  }
+  .login-wrapper .login-container {
+    margin: 0 auto !important;
+  }
+}
+
 @media screen and (min-width: 768px) and (max-width: 992px) {
   .rounded.p-4.fs-3 {
     font-size: 18px !important;
